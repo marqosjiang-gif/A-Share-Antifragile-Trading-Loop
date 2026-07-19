@@ -1,75 +1,81 @@
 # A-Share Antifragile Trading Loop Design System
 
+This project adapts a Revolut-inspired fintech system into a neutral open-source identity. It borrows the precision, flat contrast, and semantic status palette, but never copies brand assets, logos, fonts, or product UI.
+
 ## 1. Visual Theme & Atmosphere
 
-Use a clean, trustworthy financial-research aesthetic: precise, calm, evidence-led, and suitable for an open-source developer audience. Prefer bright white reading surfaces with near-black analytical panels and a single high-confidence blue accent.
+The interface should feel calm, exact, and evidence-led. Near-black analytical surfaces and white reading areas create trust through contrast. The first visual signal is always the research loop: market data enters, validation gates remove weak evidence, and an auditable decision exits.
 
 ## 2. Color Palette & Roles
 
-- Primary blue: `#0052FF` for links, active flow, and verified states.
-- White: `#FFFFFF` for the main reading surface.
-- Near black: `#0A0B0D` for text and analytical panels.
-- Cool gray: `#EEF0F3` for secondary surfaces and separators.
-- Positive green: `#16A36A`, used only for actual positive market states.
-- Risk red: `#D93A3A`, used only for actual risk or negative market states.
+| Token | Value | Role |
+|---|---|---|
+| Ink | `#191C1F` | Primary text and dark analytical surface |
+| Paper | `#FFFFFF` | Main reading surface |
+| Soft surface | `#F4F4F4` | Secondary background and code blocks |
+| Border | `#C9C9CD` | Rules and dividers |
+| Action blue | `#494FDF` | Links, selected flow, verified path |
+| Positive teal | `#00A87E` | Verified positive state only |
+| Warning orange | `#EC7E00` | Degraded or incomplete evidence |
+| Danger red | `#E23B4A` | Verified risk or failed gate |
+| Muted slate | `#505A63` | Secondary text |
 
-Do not use red or green as decoration. Do not introduce purple gradients.
+Red, green, and orange are semantic, never decorative. Do not use gradients, colored glow, or a one-note blue/purple palette.
 
 ## 3. Typography Rules
 
-- Display: system sans-serif, 700 weight, compact but not negatively tracked.
-- Section heading: system sans-serif, 600 weight.
-- Body: system sans-serif, 400 weight, comfortable line height.
-- Code and data: system monospace.
-- Use short, literal headings. Keep long explanations in body copy.
+- Display and headings: system sans-serif, weight 500-600, line height 1.1-1.25.
+- Body: system sans-serif, 16-18px equivalent, line height 1.5.
+- Data and code: system monospace with tabular numerals where available.
+- Letter spacing is always `0`; never scale type directly with viewport width.
+- Use literal headings. Performance-sounding language requires measured evidence.
 
 ## 4. Component Styling
 
-- README badges: functional only, limited to license, runtime, market, cadence, and access mode.
-- Tables: clear headers, one concept per column, no decorative status colors.
-- Images: maximum 8px visual corner radius; full-width at README scale.
-- Callouts: use GitHub-native note syntax for warnings and constraints.
-- Diagrams: simple directional flow, blue arrows, white or near-black surfaces.
+- README badges are functional and limited to runtime, market, license, and privacy.
+- Tables use one metric per column and always expose source or time range near the data.
+- Images are full-width with no more than 8px corner radius.
+- Callouts use GitHub-native note/warning blocks.
+- Status indicators pair color with text; color alone is insufficient.
+- Controls in future UIs use familiar icons and tooltips, with 44px minimum touch targets.
 
 ## 5. Layout Principles
 
-- Center the repository name, value proposition, language navigation, badges, and hero image.
-- Keep installation and first-run commands visible before deep technical details.
-- Use full-width sections with a consistent reading width.
-- Base spacing on an 8px rhythm.
-- Never nest decorative cards.
+- Center only the repository header, language switcher, badges, and hero.
+- Put value, quick start, and privacy promise before architecture details.
+- Use full-width sections with a constrained reading width; never nest cards.
+- Use an 8px spacing rhythm: 8, 16, 24, 32, 48, 64, 80.
+- Fixed-format charts and tables require stable widths or responsive overflow.
 
 ## 6. Depth & Elevation
 
-Use color contrast rather than shadows. If depth is necessary, keep it subtle and limited to the hero image. Avoid glassmorphism, glow, and floating decorative shapes.
+Use zero shadows. Depth comes from ink/paper contrast, dividers, and whitespace. Do not use glassmorphism, floating surfaces, bokeh, or decorative orbs.
 
 ## 7. Do's and Don'ts
 
 ### Do
 
-- Show the actual decision loop: verify, filter, decide, evolve.
-- Explain data windows and degradation behavior explicitly.
-- Keep A-shares as the first-viewport market signal.
-- Use diagrams and visuals to clarify workflow, not to imply performance.
+- Show verify, filter, decide, and evolve as one closed loop.
+- Label trading-day windows and explicit degradation states.
+- Keep A-shares visible in the title and first viewport.
+- Use diagrams to explain process, never to imply returns.
 
 ### Don't
 
-- Do not show personal stock lists, holdings, costs, quantities, or email addresses.
-- Do not show fake returns, users, stars, endorsements, or live-trading claims.
-- Do not expose internal class names in audience-facing positioning.
-- Do not copy third-party logos, screenshots, or branded artwork.
+- Never publish emails, holdings, costs, quantities, reports, local paths, or default stock lists.
+- Never show fake returns, stars, users, endorsements, or live-order claims.
+- Never use real stock codes or third-party marks in generated artwork.
+- Never turn stale events or missing data into directional conclusions.
 
 ## 8. Responsive Behavior
 
-- Hero imagery must remain legible at mobile README width.
-- Tables may scroll naturally in GitHub; keep columns concise.
-- Mermaid diagrams should use short node labels.
-- Do not rely on side-by-side layouts for essential information.
+- The hero must remain legible from 320px to wide desktop.
+- Essential information cannot depend on side-by-side layouts.
+- Tables may scroll horizontally; headings and cells must not overlap.
+- Mermaid nodes use short labels and vertical flow on narrow screens.
 
 ## 9. Agent Prompt Guide
 
-When creating new README assets, use:
-
 ```text
-Clean open-source fintech research aesthetic. White background, near-black analytical surface, #0052FF functional accent, sparse red/green market states. Show an auditable weekly loop connecting verified data, BOLL evidence, capital flow, risk gates, and evolution. No personal data, stock codes, performance claims, logos, tiny text, gradients, glow, or decorative blobs.
+Create a privacy-first open-source fintech research visual on a flat near-black or white surface. Show A-share market traces entering explicit verification and freshness gates, then producing an auditable decision record. Use #494FDF, #00A87E, #EC7E00, and #E23B4A only as small semantic accents. No text, logos, real stock codes, personal data, returns, gradients, glow, decorative cards, or watermark.
 ```

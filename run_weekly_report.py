@@ -10,13 +10,20 @@ import re
 import ssl
 import urllib.parse
 import urllib.request
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Iterable
+
+from antifragile.cftc import fetch_gold_positioning
 
 
 BASE_DIR = Path(__file__).resolve().parent
 WATCH_TICKERS = os.environ.get("WATCH_TICKERS", "")
+ENABLE_CFTC_GOLD = os.environ.get("ENABLE_CFTC_GOLD", "1").strip().lower() not in {
+    "0",
+    "false",
+    "no",
+}
 
 _SSL_CONTEXT = ssl.create_default_context()
 _SSL_CONTEXT.check_hostname = False
@@ -76,7 +83,9 @@ def fetch_index(secid: str) -> tuple[str, float, float]:
     )
 
 
-def fetch_us_snapshot(codes: Iterable[str]) -> dict[str, tuple[str, str, float]]:
+def fetch_us_snapshot(
+    codes: Iterable[str],
+) -> dict[str, tuple[str, str, float, datetime]]:
     text = http_get(
         "https://qt.gtimg.cn/q=" + ",".join(codes), codec="gbk"
     )
@@ -84,11 +93,18 @@ def fetch_us_snapshot(codes: Iterable[str]) -> dict[str, tuple[str, str, float]]
     for segment in text.split(";"):
         if "=" not in segment:
             continue
-        fields = segment.split("=", 1)[1].strip().strip('"').split("~")
-        if len(fields) < 5:
+        raw_key, raw_value = segment.split("=", 1)
+        key = raw_key.strip().removeprefix("v_")
+        fields = raw_value.strip().strip('"').split("~")
+        if len(fields) < 33:
             continue
         try:
-            result[fields[0]] = (fields[1], fields[3], float(fields[4]))
+            result[key] = (
+                fields[1],
+                fields[3],
+                float(fields[32]),
+                datetime.strptime(fields[30], "%Y-%m-%d %H:%M:%S"),
+            )
         except (TypeError, ValueError):
             continue
     return result
@@ -182,8 +198,8 @@ def build_report(symbols: list[str]) -> str:
             "",
             "### US market context",
             "",
-            "| Symbol | Last | Change |",
-            "|---|---:|---:|",
+            "| Symbol | Last | Change | As of |",
+            "|---|---:|---:|---|",
         ]
     )
     try:
@@ -191,13 +207,16 @@ def build_report(symbols: list[str]) -> str:
         for code in ("usSPY", "usQQQ", "usVIX"):
             if code not in us:
                 continue
-            name, price, change = us[code]
+            name, price, change, as_of = us[code]
+            if as_of < datetime.now() - timedelta(days=7):
+                lines.append(f"| {name} | -- | stale data rejected | {as_of:%Y-%m-%d} |")
+                continue
             lines.append(
                 f"| {name} | {price} | "
-                f"{direction(change)} {abs(change):.2f}% |"
+                f"{direction(change)} {abs(change):.2f}% | {as_of:%Y-%m-%d} |"
             )
     except Exception:
-        lines.append("| SPY / QQQ / VIX | -- | data unavailable |")
+        lines.append("| SPY / QQQ / VIX | -- | data unavailable | -- |")
 
     lines.extend(["", "## Configured A-share watchlist", ""])
     if not symbols:
@@ -231,6 +250,31 @@ def build_report(symbols: list[str]) -> str:
                     f"| {symbol} | -- | -- | data unavailable | -- |"
                 )
 
+    lines.extend(["", "## Public positioning context", ""])
+    if not ENABLE_CFTC_GOLD:
+        lines.append("CFTC gold positioning is disabled by configuration.")
+    else:
+        try:
+            gold = fetch_gold_positioning()
+            lines.extend(
+                [
+                    "### COMEX gold managed-money positioning",
+                    "",
+                    "| As of | Long | Short | Net | Prior-week net | Weekly change |",
+                    "|---|---:|---:|---:|---:|---:|",
+                    f"| {gold.as_of} | {gold.managed_money_long:,} | "
+                    f"{gold.managed_money_short:,} | {gold.managed_money_net:,} | "
+                    f"{gold.prior_week_net:,} | {gold.weekly_net_change:+,} |",
+                    "",
+                    f"Source: {gold.source}. This is a weekly positioning context signal, not a trade trigger.",
+                ]
+            )
+        except Exception as exc:
+            lines.append(
+                "CFTC gold positioning unavailable; no positioning conclusion was generated "
+                f"({type(exc).__name__})."
+            )
+
     lines.extend(
         [
             "",
@@ -239,6 +283,8 @@ def build_report(symbols: list[str]) -> str:
             "- Verify price, date, and volume before interpretation.",
             "- Remove unsupported narratives before adding a directional view.",
             "- Treat missing or conflicting data as lower confidence.",
+            "- Require event claims to pass a 168-hour freshness gate.",
+            "- Let an adequately sampled historical BOLL signal lead; use lower-priority evidence to confirm or constrain it.",
             "- This snapshot does not place orders or provide investment advice.",
             "",
         ]

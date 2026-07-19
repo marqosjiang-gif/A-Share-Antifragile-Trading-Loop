@@ -2,117 +2,140 @@
 
 # A-Share Antifragile Trading Loop
 
-### Una instantánea semanal de acciones A con privacidad desde el diseño
+### Un ciclo semanal, privado y verificable para investigar acciones A de China
 
-Verifique los datos, elimine narrativas sin respaldo y haga auditable la siguiente decisión.
+Verifica los datos. Elimina relatos caducados. Decide con evidencia auditable.
 
 [English](../README.md) | [Español](README.es.md) | [简体中文](README.zh-CN.md)
 
-<img src="../assets/readme/hero.png" alt="Flujo de A-Share Antifragile Trading Loop" width="100%" />
+[![License: MIT](https://img.shields.io/badge/License-MIT-494FDF.svg)](../LICENSE)
+[![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-3776AB.svg?logo=python&logoColor=white)](https://www.python.org/)
+[![Market: A-shares](https://img.shields.io/badge/Market-A--shares-E23B4A.svg)](#capacidades)
+[![Privacy: local first](https://img.shields.io/badge/Privacy-Local--first-191C1F.svg)](#privacidad-por-diseño)
+
+<img src="../assets/readme/hero-v2.png" alt="Datos de mercado que pasan por controles de verificación antes de formar una decisión semanal auditable" width="100%" />
 
 </div>
 
 > [!IMPORTANT]
-> Este proyecto sirve para educación e investigación cuantitativa. No envía órdenes ni ofrece asesoramiento financiero.
+> Solo para educación e investigación. El proyecto no envía órdenes ni promete rentabilidad.
 
 ## Por qué existe
 
-Una revisión semanal puede mezclar precios recientes, noticias antiguas y convicción personal. Este proyecto propone un ciclo más pequeño y seguro:
+Una revisión semanal es frágil cuando mezcla precios recientes, eventos antiguos, ventanas incompatibles y convicciones personales. Este proyecto crea un ciclo pequeño y comprobable:
 
-1. Obtener datos públicos durante la ejecución.
-2. Mostrar la ventana temporal utilizada.
-3. Marcar datos ausentes sin inventar precios.
-4. Aplicar reglas de investigación antifrágil.
-5. Generar una instantánea Markdown auditable.
+1. Obtiene datos públicos durante la ejecución.
+2. Expone la ventana temporal de cada métrica.
+3. Detiene las acciones direccionales si precio o volumen no están verificados.
+4. Da la mayor prioridad a BOLL histórico con una muestra suficiente.
+5. Usa flujos, fundamentales, materias primas y eventos como confirmación o límite.
+6. Muestra la degradación de datos sin inventar sustitutos.
 
 ## Capacidades
 
-| Capacidad | Comportamiento |
+| Capacidad | Comportamiento público |
 |---|---|
 | Contexto de acciones A | SSE Composite, SZSE Component y STAR 50 |
-| Contexto internacional | SPY, QQQ y VIX |
-| Lista configurable | Solo lee WATCH_TICKERS |
-| Ventana semanal | Primera apertura y último cierre de la semana representada |
-| Degradación explícita | No usa valores simulados |
-| Salida portátil | Genera un informe Markdown local |
+| Lista opcional | Lee símbolos solo desde `WATCH_TICKERS`; por defecto está vacía |
+| Ventana semanal | Primera apertura y último cierre de la semana bursátil representada |
+| Flujo de capital | Ventanas exactas de 5/10/20 sesiones con fechas de inicio y fin |
+| Arbitraje | Filtro duro de datos; después BOLL > precio/volumen > flujo > fundamentales > narrativa macro |
+| Vigencia de eventos | Rechaza eventos anteriores a 168 horas respecto a la revisión |
+| Posicionamiento del oro | Lee el posicionamiento semanal público de CFTC COMEX y declara fallos |
+| Fallos de fuente | Marca datos no disponibles; nunca usa precios simulados |
 
-## Privacidad desde el diseño
+## Privacidad por diseño
 
-- El repositorio no contiene una lista predeterminada de acciones.
-- No solicita cantidades, costes de compra, cuentas ni correo electrónico.
-- Git ignora configuraciones personales, informes, gráficos, registros y exportaciones.
-- Los informes generados permanecen en el equipo local salvo publicación deliberada.
+- Sin lista de acciones, cartera, cantidades, costes, cuenta ni correo por defecto.
+- Informes, configuración local, registros, exportaciones y gráficos se ignoran en Git.
+- Los símbolos se entregan en tiempo de ejecución y permanecen locales salvo publicación deliberada.
+- Los módulos públicos procesan evidencia genérica, no perfiles personales ocultos.
 
 ## Inicio rápido
 
-~~~bash
+```bash
 git clone https://github.com/marqosjiang-gif/A-Share-Antifragile-Trading-Loop.git
 cd A-Share-Antifragile-Trading-Loop
-
 python3 -m venv .venv
 source .venv/bin/activate
 python3 run_weekly_report.py
-~~~
+```
 
-Sin lista configurada, el informe solo contiene contexto de índices.
+La primera ejecución no necesita acciones. Para añadir tus propios símbolos:
 
-Para analizar sus propios símbolos:
-
-~~~bash
+```bash
 export WATCH_TICKERS="<símbolo-de-seis-dígitos>.SS,<símbolo-de-seis-dígitos>.SZ"
 python3 run_weekly_report.py
-~~~
+```
 
-Shanghai usa .SS; Shenzhen usa .SZ.
+Shanghái usa `.SS` y Shenzhen `.SZ`. Usa `ENABLE_CFTC_GOLD=0` para omitir CFTC.
 
-## Archivo generado
+## Salida
 
-~~~text
+```text
 antifragile_weekly_YYYYMMDD.md
-~~~
+```
 
-Incluye contexto de índices, referencia internacional, movimientos semanales opcionales, disponibilidad de datos y reglas antifrágiles.
+Incluye contexto de mercado, movimientos semanales opcionales, posicionamiento público del oro, degradación de fuentes y reglas de investigación antifrágil.
 
-## Funcionamiento
+## Contrato de decisión
 
-~~~mermaid
+```mermaid
 flowchart TD
-    A["WATCH_TICKERS opcional"] --> B["Fuentes públicas en tiempo de ejecución"]
-    B --> C["Validar símbolo y ventana"]
-    C --> D{"¿Datos disponibles?"}
-    D -- No --> E["Marcar no disponible"]
-    D -- Sí --> F["Calcular primera apertura a último cierre"]
-    E --> G["Instantánea Markdown"]
-    F --> G
-    G --> H["Revisar, filtrar y decidir"]
-~~~
+    A["Datos públicos en ejecución"] --> B{"Precio y volumen verificados?"}
+    B -- No --> C["Solo observar"]
+    B -- Sí --> D["Evidencia BOLL histórica"]
+    D --> E["Flujo de 5 / 10 / 20 días"]
+    E --> F["Fundamentales y eventos recientes"]
+    F --> G["Acción condicional auditable"]
+    G --> H["Revisión semanal y evolución"]
+```
 
-## Configuración
+Una señal BOLL ejecutable requiere datos verificados y al menos tres operaciones históricas completadas. La evidencia de menor prioridad puede reducir la confianza, pero no reemplaza en silencio una señal superior válida.
 
-| Variable | Uso | Obligatoria |
-|---|---|---|
-| WATCH_TICKERS | Símbolos de acciones A separados por comas | No |
-| TA_VENV | Ruta Python opcional de TradingAgents | No |
-| TA_RUN_WEBUI_TOOLS | Adaptador opcional de TradingAgents | No |
-| TA_CWD | Directorio opcional de TradingAgents | No |
+## Estructura
 
-El núcleo público usa únicamente la biblioteca estándar de Python.
+```text
+.
+├── antifragile/
+│   ├── cftc.py
+│   ├── decision.py
+│   ├── flows.py
+│   └── freshness.py
+├── assets/readme/
+├── docs/
+├── run_weekly_report.py
+├── test_public_snapshot.py
+├── config.yaml
+└── DESIGN.md
+```
 
 ## Verificación
 
-~~~bash
-python3 -m py_compile run_weekly_report.py
+```bash
+python3 -m py_compile run_weekly_report.py antifragile/*.py
 python3 -m unittest test_public_snapshot -v
-~~~
+```
 
-## Extensión segura
+Las pruebas cubren privacidad por defecto, ventanas de flujo, fechas duplicadas, vigencia de eventos, prioridad BOLL, muestras pequeñas, evidencia conflictiva y análisis CFTC.
 
-Se pueden añadir BOLL, flujos de capital, verificación de eventos y registros de decisión. Los símbolos deben entrar por configuración y cada dato debe conservar fuente, fecha y estado de degradación.
+## Configuración
+
+| Variable | Uso | Valor inicial |
+|---|---|---|
+| `WATCH_TICKERS` | Símbolos A separados por comas | Vacío |
+| `ENABLE_CFTC_GOLD` | Contexto público de oro CFTC | `1` |
+
+El núcleo público usa solo la biblioteca estándar de Python.
+
+## Contribuir
+
+Se aceptan Issues y Pull Requests. No publiques credenciales, datos financieros personales, informes generados, rutas privadas ni material propietario.
 
 ## Licencia
 
-Publicado bajo la [Licencia MIT](../LICENSE).
+Publicado bajo [MIT License](../LICENSE).
 
-## Aviso legal
+## Aviso
 
-Los datos pueden retrasarse, faltar o no estar disponibles. El proyecto no garantiza precisión, resultados de trading ni rentabilidad futura. Cada usuario es responsable de su investigación y decisiones.
+Los datos pueden llegar tarde, estar incompletos, cambiar o no estar disponibles. Cada usuario debe verificar las fuentes y asumir sus propias decisiones.

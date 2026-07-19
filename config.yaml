@@ -23,3 +23,21 @@ data_policy:
   runtime_only: true
   missing_data: mark_unavailable
   simulated_fallback: false
+  event_freshness_hours: 168
+
+research_policy:
+  decision_priority:
+    - verified_historical_boll
+    - price_and_volume
+    - capital_flow_5_10_20_days
+    - company_fundamentals
+    - commodity_transmission
+    - geopolitical_context
+  minimum_completed_boll_trades: 3
+  unsupported_narratives: remove
+
+public_context:
+  cftc_gold:
+    enabled_by_default: true
+    source: CFTC Disaggregated Futures-Only
+    market_code: "088691"
