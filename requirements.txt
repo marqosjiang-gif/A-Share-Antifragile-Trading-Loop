@@ -1,0 +1,2 @@
+# The public core uses only the Python 3.10+ standard library.
+# Add optional analytics dependencies in your own extension environment.

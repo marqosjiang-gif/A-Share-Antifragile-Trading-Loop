@@ -1,0 +1,25 @@
+project:
+  name: A-Share Antifragile Trading Loop
+  runtime: Python 3.10+
+
+market:
+  target: China A-shares
+  context:
+    - SSE Composite
+    - SZSE Component
+    - STAR 50
+    - SPY
+    - QQQ
+    - VIX
+
+watchlist:
+  source: WATCH_TICKERS environment variable
+  default: empty
+  accepted_suffixes:
+    - .SS
+    - .SZ
+
+data_policy:
+  runtime_only: true
+  missing_data: mark_unavailable
+  simulated_fallback: false
