@@ -13,7 +13,7 @@ Verifica los datos. Elimina relatos caducados. Decide con evidencia auditable.
 [![Market: A-shares](https://img.shields.io/badge/Market-A--shares-E23B4A.svg)](#capacidades)
 [![Privacy: local first](https://img.shields.io/badge/Privacy-Local--first-191C1F.svg)](#privacidad-por-diseño)
 
-<img src="../assets/readme/hero-v2.png" alt="Datos de mercado que pasan por controles de verificación antes de formar una decisión semanal auditable" width="100%" />
+<img src="../assets/readme/hero.png" alt="Datos de mercado que pasan por controles de verificación antes de formar una decisión semanal auditable" width="100%" />
 
 </div>
 

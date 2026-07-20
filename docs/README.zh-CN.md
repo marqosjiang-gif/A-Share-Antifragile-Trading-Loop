@@ -13,7 +13,7 @@
 [![Market: A-shares](https://img.shields.io/badge/Market-A--shares-E23B4A.svg)](#项目能力)
 [![Privacy: local first](https://img.shields.io/badge/Privacy-Local--first-191C1F.svg)](#隐私设计)
 
-<img src="../assets/readme/hero-v2.png" alt="行情数据经过核验门槛后形成可审计的周度决策闭环" width="100%" />
+<img src="../assets/readme/hero.png" alt="行情数据经过核验门槛后形成可审计的周度决策闭环" width="100%" />
 
 </div>
 

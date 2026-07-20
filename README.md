@@ -14,7 +14,7 @@ Verify the numbers. Delete stale stories. Let auditable evidence lead the next a
 [![Privacy: local first](https://img.shields.io/badge/Privacy-Local--first-191C1F.svg)](#privacy-by-design)
 [![Tests: 13](https://img.shields.io/badge/Tests-13_passed-00A87E.svg)](#verification)
 
-<img src="assets/readme/hero-v2.png" alt="Market data passing through verification gates into an auditable weekly decision loop" width="100%" />
+<img src="assets/readme/hero.png" alt="Market data passing through verification gates into an auditable weekly decision loop" width="100%" />
 
 </div>
 
