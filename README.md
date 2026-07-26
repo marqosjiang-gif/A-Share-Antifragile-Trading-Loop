@@ -27,7 +27,7 @@ Verify the data. Filter the story. Decide with evidence. Learn from the result.
 
 **A-Share Antifragile Trading Loop** turns a weekly market review into an auditable research routine. It creates a Markdown strategy report from public market data, then makes the quality of the evidence visible instead of hiding missing, stale, or conflicting inputs.
 
-The core workflow is defined in [`6只持仓股信息筛选SKILL.md`](6只持仓股信息筛选SKILL.md) and implemented by [`Weekly_strategy.py`](skills/市场消息求真去伪skill/Weekly_strategy.py). The root runner, [`run_weekly_report.py`](run_weekly_report.py), starts the workflow and writes `反脆弱周盘策略_YYYYMMDD.md` to the project root.
+The public workflow contract is defined in [`A股反脆弱策略SKILL.md`](A股反脆弱策略SKILL.md) and [`docs/RESEARCH_PROTOCOL.md`](docs/RESEARCH_PROTOCOL.md). The root runner, [`run_weekly_report.py`](run_weekly_report.py), starts the key-free public snapshot and writes `antifragile_weekly_YYYYMMDD.md` to the project root.
 
 It is designed for investors who want to separate facts from narratives before making a weekly swing-trading decision:
 
@@ -87,7 +87,7 @@ The result is saved as:
 反脆弱周盘策略_YYYYMMDD.md
 ```
 
-Before using the output for research, replace the sample watchlist with your own A-share codes. Review `WATCH_TICKERS`, `_TICKER_SECID`, and `_TICKER_NAME` in [`run_weekly_report.py`](run_weekly_report.py), then keep the portfolio definitions used by the strategy modules consistent with that list. Do not commit personal portfolio quantities, costs, reports, email addresses, or credentials.
+Before using the output for research, set `WATCH_TICKERS` to your own A-share symbols. Keep any portfolio details only in a local ignored file. Do not commit personal portfolio quantities, costs, reports, email addresses, or credentials.
 
 ## Usage Example
 
@@ -168,7 +168,7 @@ That is deliberate. A missing source, stale event, price disagreement, incomplet
 
 ### How should I change the watchlist?
 
-Update the stock code, exchange mapping, and display name maps in [`run_weekly_report.py`](run_weekly_report.py). Keep related strategy-module portfolio definitions aligned. Use only your own local configuration and keep personal position information outside Git.
+Set `WATCH_TICKERS` in your shell or local environment. Use only your own local configuration and keep personal position information outside Git.
 
 ### What should be committed to a public fork?
 
