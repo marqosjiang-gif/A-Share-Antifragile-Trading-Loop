@@ -15,6 +15,30 @@ class FlowWindow:
     net_amount: float
 
 
+def classify_stock_flow(
+    net_amount: float,
+    market_cap_cny: float,
+) -> str:
+    """Classify 20-day flow using liquidity-aware public thresholds.
+
+    Large-cap and smaller-cap stocks must not share one absolute threshold.
+    The output is research context, not a standalone trade instruction.
+    """
+    if market_cap_cny <= 0:
+        raise ValueError("market_cap_cny must be positive")
+    if market_cap_cny >= 100_000_000_000:
+        inflow, outflow, neutral = 3_000_000_000, -3_000_000_000, 1_000_000_000
+    else:
+        inflow, outflow, neutral = 150_000_000, -150_000_000, 50_000_000
+    if net_amount > inflow:
+        return "persistent_inflow"
+    if net_amount < outflow:
+        return "persistent_outflow"
+    if abs(net_amount) < neutral:
+        return "range_bound"
+    return "mixed"
+
+
 def aggregate_flows(
     rows: Iterable[Mapping[str, object]], windows: tuple[int, ...] = (5, 10, 20)
 ) -> dict[int, FlowWindow]:

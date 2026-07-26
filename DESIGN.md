@@ -1,10 +1,10 @@
 # A-Share Antifragile Trading Loop Design System
 
-This project adapts a Revolut-inspired fintech system into a neutral open-source identity. It borrows the precision, flat contrast, and semantic status palette, but never copies brand assets, logos, fonts, or product UI.
+This project uses a neutral open-source fintech identity built around evidence, provenance, and explicit failure states. It does not copy third-party brand assets, logos, fonts, or product UI.
 
 ## 1. Visual Theme & Atmosphere
 
-The interface should feel calm, exact, and evidence-led. Near-black analytical surfaces and white reading areas create trust through contrast. The first visual signal is always the research loop: market data enters, validation gates remove weak evidence, and an auditable decision exits.
+The interface should feel calm, exact, and evidence-led. White is the default reading surface; dark analytical panels are reserved for real chart content. The first visual signal is always the research loop: market data enters, validation gates remove weak evidence, and an auditable decision exits.
 
 ## 2. Color Palette & Roles
 
@@ -14,10 +14,10 @@ The interface should feel calm, exact, and evidence-led. Near-black analytical s
 | Paper | `#FFFFFF` | Main reading surface |
 | Soft surface | `#F4F4F4` | Secondary background and code blocks |
 | Border | `#C9C9CD` | Rules and dividers |
-| Action blue | `#494FDF` | Links, selected flow, verified path |
-| Positive teal | `#00A87E` | Verified positive state only |
-| Warning orange | `#EC7E00` | Degraded or incomplete evidence |
-| Danger red | `#E23B4A` | Verified risk or failed gate |
+| Action blue | `#2563EB` | Links, selected flow, verified path |
+| Positive green | `#059669` | Verified positive state only |
+| Warning amber | `#D97706` | Degraded or incomplete evidence |
+| Danger red | `#C81E1E` | Verified risk or failed gate |
 | Muted slate | `#505A63` | Secondary text |
 
 Red, green, and orange are semantic, never decorative. Do not use gradients, colored glow, or a one-note blue/purple palette.
@@ -77,5 +77,5 @@ Use zero shadows. Depth comes from ink/paper contrast, dividers, and whitespace.
 ## 9. Agent Prompt Guide
 
 ```text
-Create a privacy-first open-source fintech research visual on a flat near-black or white surface. Show A-share market traces entering explicit verification and freshness gates, then producing an auditable decision record. Use #494FDF, #00A87E, #EC7E00, and #E23B4A only as small semantic accents. No text, logos, real stock codes, personal data, returns, gradients, glow, decorative cards, or watermark.
+Create a privacy-first open-source fintech research visual on a clean white surface. Show A-share market traces entering explicit verification and freshness gates, then producing an auditable decision record. Use #2563EB, #059669, #D97706, and #C81E1E only as small semantic accents. No logos, real stock codes, personal data, returns, gradients, glow, decorative cards, or watermark.
 ```

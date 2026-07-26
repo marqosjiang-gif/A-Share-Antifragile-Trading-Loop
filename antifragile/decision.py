@@ -16,6 +16,8 @@ class BollEvidence:
     win_rate: float | None = None
     efficiency_per_day: float | None = None
     verified: bool = False
+    timeframe: Literal["daily", "weekly", "monthly", "unknown"] = "unknown"
+    band_position_pct: float | None = None
 
     @property
     def sample_is_actionable(self) -> bool:
@@ -32,6 +34,7 @@ class ResearchEvidence:
     flow_verified: bool = False
     fundamentals_verified: bool = False
     adverse_event_verified: bool = False
+    survival_risk: bool = False
 
 
 @dataclass(frozen=True)
@@ -48,6 +51,13 @@ def decide(evidence: ResearchEvidence) -> Decision:
     Lower-priority evidence can reduce confidence or tighten risk, but cannot
     silently override an actionable historical BOLL signal.
     """
+    if evidence.survival_risk:
+        return Decision(
+            "observe",
+            "A verified survival-risk gate blocks new exposure.",
+            "low",
+            ("survival-risk hard gate failed",),
+        )
     if not evidence.price_verified or not evidence.volume_verified:
         return Decision(
             "observe",
@@ -60,7 +70,8 @@ def decide(evidence: ResearchEvidence) -> Decision:
     reasons: list[str] = ["price and volume verified"]
     if boll.verified:
         reasons.append(
-            f"BOLL={boll.action}, completed_trades={boll.completed_trades}"
+            f"BOLL={boll.action}, timeframe={boll.timeframe}, "
+            f"completed_trades={boll.completed_trades}"
         )
     else:
         reasons.append("BOLL unavailable")
@@ -80,7 +91,7 @@ def decide(evidence: ResearchEvidence) -> Decision:
     if boll.sample_is_actionable and boll.action == "sell":
         return Decision(
             "reduce",
-            "The historical BOLL sell region is active; reduce exposure by plan.",
+            "The best historical BOLL sell region is active; reduce exposure by plan.",
             "high" if flow_negative or evidence.adverse_event_verified else "medium",
             tuple(reasons),
         )
@@ -94,7 +105,7 @@ def decide(evidence: ResearchEvidence) -> Decision:
             )
         return Decision(
             "buy",
-            "The historical BOLL buy region is active; execute only the pre-sized staged plan.",
+            "The best historical BOLL buy region is active; execute only the pre-sized staged plan.",
             "high" if evidence.flow_verified else "medium",
             tuple(reasons),
         )
@@ -119,3 +130,16 @@ def decide(evidence: ResearchEvidence) -> Decision:
         "low",
         tuple(reasons),
     )
+
+
+def boll_position_wording(position_pct: float) -> str:
+    """Keep action wording consistent with the actual BOLL band position."""
+    if position_pct > 100:
+        return "above_upper_band_sell_region"
+    if position_pct < 0:
+        return "below_lower_band_buy_region"
+    if position_pct <= 8:
+        return "near_lower_band"
+    if position_pct >= 92:
+        return "near_upper_band"
+    return "inside_band"

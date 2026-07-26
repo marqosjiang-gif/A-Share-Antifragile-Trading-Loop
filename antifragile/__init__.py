@@ -13,3 +13,14 @@ __all__ = [
     "decide",
     "is_fresh_event",
 ]
+"""Public, privacy-safe research primitives."""
+
+from .decision import boll_position_wording
+from .flows import classify_stock_flow
+from .freshness import evaluate_scan_coverage
+
+__all__ = [
+    "boll_position_wording",
+    "classify_stock_flow",
+    "evaluate_scan_coverage",
+]

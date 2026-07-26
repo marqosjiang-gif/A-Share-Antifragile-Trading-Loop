@@ -11,8 +11,14 @@ Maintain the public A-share research core without introducing personal portfolio
 - Keep price/volume validation ahead of technical interpretation.
 - Give historical BOLL the highest technical weight only after hard data and survival-risk gates pass; require at least three completed historical trades.
 - Keep sector 5-day flow separate from stock 5/10/20-day flow.
+- Print the start and end trading dates for every weekly or cumulative metric.
+- Use liquidity-aware thresholds for stock-flow interpretation; one absolute threshold cannot cover both large and small caps.
+- Keep BOLL wording consistent with band position: above 100% is an active sell region, below 0% is an active buy region.
 - Do not turn broad policy, macro headlines, or unverified news into direct trade conclusions.
 - Preserve the 168-hour event freshness rule unless a report labels an item as historical background.
+- Report "scanned, no material event" only when every configured event dimension completed successfully.
+- Treat DXY, oil, metals, and other macro series as context or constraints, never standalone stock actions.
+- Keep earnings dates forward-looking and explicit; missing dates must remain missing.
 - Do not place orders or send email from the public core.
 
 ## Privacy and publication
@@ -20,6 +26,7 @@ Maintain the public A-share research core without introducing personal portfolio
 - Never commit account data, position size, purchase cost, portfolio history, report output, email addresses, API keys, tokens, local paths, caches, or WorkBuddy/automation state.
 - Keep credentials in environment variables or ignored local files only.
 - Before publishing, run a sensitive-data scan, review the staged file list, and stage explicit paths rather than `git add -A`.
+- Never publish WorkBuddy scripts that contain embedded portfolio maps, recipient addresses, access tokens, provider caches, or local interpreter paths.
 
 ## Verification
 
