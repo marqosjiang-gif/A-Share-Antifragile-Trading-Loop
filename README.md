@@ -70,7 +70,7 @@ python3 -m pip install --upgrade pip
 python3 -m pip install -r requirements.txt
 ```
 
-The base workflow needs `pandas`. `yfinance`, `matplotlib`, and `akshare` are optional enhancements for cross-checking, charts, and selected data paths.
+The public core uses only the Python standard library. Keep optional analytics packages in your own extension environment.
 
 ## Quick Start
 
@@ -101,18 +101,13 @@ python3 run_weekly_report.py
 ### Validate the Python entry points after a workflow change
 
 ```bash
-python3 -m py_compile \
-  run_weekly_report.py \
-  skills/市场消息求真去伪skill/Weekly_strategy.py
+python3 -m py_compile run_weekly_report.py antifragile/*.py
 ```
 
 ### Run the focused decision-rule tests
 
 ```bash
-python3 -m unittest \
-  test_boll_decision_priority \
-  test_fund_flow_skill_rules \
-  test_geopolitical_freshness
+python3 -m unittest test_public_snapshot -v
 ```
 
 ### Read the generated report correctly
@@ -128,26 +123,14 @@ python3 -m unittest \
 
 ## Configuration
 
-[`config.yaml`](config.yaml) documents optional integrations. The default path uses public, key-free market endpoints; unavailable optional services should degrade visibly rather than stop the report.
+[`config.yaml`](config.yaml) documents the public evidence policy and time-window rules. Runtime options are supplied through environment variables; unavailable sources degrade visibly instead of stopping the report.
 
 | Setting | Purpose | Required |
 |---|---|---|
-| `TA_VENV`, `TA_RUN_WEBUI_TOOLS`, `TA_CWD` | Optional TradingAgents market snapshot | No |
-| `WESTOCK_CLI`, `YAHOO_FINANCE_SKILL`, `TA_PYTHON` | Optional cross-source validation paths | No |
-| `JIAOZHEN_API_KEY` | Optional third-source geopolitical fact check | No |
-| `BOLL_BACKTEST_SCRIPT`, `PYTHON_ENV` | Historical BOLL backtest integration | No |
-| `NEODATA_QUERY_SCRIPT`, `NEODATA_SKILL_DIR` | Optional financial-search fallback | No |
-| `ASTOCK_TDX_CACHE` | Optional local TDX cache | No |
+| `WATCH_TICKERS` | Comma-separated `.SS` / `.SZ` research symbols | No |
+| `ENABLE_CFTC_GOLD` | Enable public CFTC gold positioning | No |
 | `ENABLE_MACRO_CONTEXT` | Enable public DXY and Brent weekly context | No |
 | `EARNINGS_CALENDAR_PATH` | Path to an ignored local earnings calendar | No |
-
-Example of enabling a local BOLL backtest:
-
-```bash
-export BOLL_BACKTEST_SCRIPT="/absolute/path/to/boll_backtest.py"
-export PYTHON_ENV="/absolute/path/to/python"
-python3 run_weekly_report.py
-```
 
 The weekly report uses explicit time windows:
 
