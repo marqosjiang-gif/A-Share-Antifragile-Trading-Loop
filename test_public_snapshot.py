@@ -2,9 +2,15 @@ import unittest
 from datetime import datetime, timedelta, timezone
 
 from antifragile.cftc import parse_disaggregated_gold
-from antifragile.decision import BollEvidence, ResearchEvidence, decide
-from antifragile.flows import aggregate_flows
-from antifragile.freshness import is_fresh_event
+from antifragile.decision import (
+    BollEvidence,
+    ResearchEvidence,
+    boll_position_wording,
+    decide,
+)
+from antifragile.flows import aggregate_flows, classify_stock_flow
+from antifragile.freshness import evaluate_scan_coverage, is_fresh_event
+from antifragile.market_context import _weekly_metric, parse_fred_series
 from unittest.mock import patch
 
 from run_weekly_report import (
@@ -64,11 +70,29 @@ class PublicSnapshotTests(unittest.TestCase):
                 ]
             )
 
+    def test_flow_classification_uses_liquidity_tiers(self):
+        self.assertEqual(
+            classify_stock_flow(200_000_000, 20_000_000_000),
+            "persistent_inflow",
+        )
+        self.assertEqual(
+            classify_stock_flow(200_000_000, 200_000_000_000),
+            "range_bound",
+        )
+
     def test_event_freshness_gate_is_168_hours(self):
         now = datetime(2026, 7, 19, tzinfo=timezone.utc)
         self.assertTrue(is_fresh_event(now - timedelta(hours=168), now))
         self.assertFalse(is_fresh_event(now - timedelta(hours=169), now))
         self.assertFalse(is_fresh_event(now + timedelta(minutes=1), now))
+
+    def test_no_event_requires_complete_scan(self):
+        coverage = evaluate_scan_coverage(
+            ("trade", "strait", "europe"),
+            ("trade", "strait"),
+        )
+        self.assertFalse(coverage.is_complete)
+        self.assertEqual(coverage.missing, ("europe",))
 
     def test_price_volume_gate_blocks_directional_action(self):
         result = decide(
@@ -117,6 +141,42 @@ class PublicSnapshotTests(unittest.TestCase):
             )
         )
         self.assertEqual(result.label, "observe")
+
+    def test_survival_risk_blocks_new_exposure(self):
+        result = decide(
+            ResearchEvidence(
+                price_verified=True,
+                volume_verified=True,
+                boll=BollEvidence("buy", 9, 0.8, 0.4, True),
+                survival_risk=True,
+            )
+        )
+        self.assertEqual(result.label, "observe")
+
+    def test_boll_wording_matches_band_position(self):
+        self.assertEqual(
+            boll_position_wording(101), "above_upper_band_sell_region"
+        )
+        self.assertEqual(
+            boll_position_wording(-1), "below_lower_band_buy_region"
+        )
+        self.assertEqual(boll_position_wording(5), "near_lower_band")
+
+    def test_fred_weekly_window_uses_latest_five_valid_values(self):
+        points = parse_fred_series(
+            "observation_date,DCOILBRENTEU\n"
+            "2026-07-13,70\n"
+            "2026-07-14,.\n"
+            "2026-07-15,72\n"
+            "2026-07-16,73\n"
+            "2026-07-17,74\n"
+            "2026-07-20,75\n",
+            "DCOILBRENTEU",
+        )
+        metric = _weekly_metric("Brent", points, "FRED")
+        self.assertEqual(metric.start.isoformat(), "2026-07-13")
+        self.assertEqual(metric.end.isoformat(), "2026-07-20")
+        self.assertAlmostEqual(metric.change_pct, (75 / 70 - 1) * 100)
 
     def test_parses_cftc_gold_and_prior_week(self):
         row = ["0"] * 64

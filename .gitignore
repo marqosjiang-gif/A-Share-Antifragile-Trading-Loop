@@ -117,6 +117,13 @@ watchlist.local.*
 skills/
 TradingAgents/
 
+# WorkBuddy-only orchestration and adapters may contain local recipients,
+# provider tokens, portfolio synchronization, or absolute runtime paths.
+scripts/send_weekly_report_email.py
+scripts/fetch_data.py
+scripts/pingan_announcement_adapter.py
+sync_portfolio_to_skill.py
+
 # ---------- Runtime logs and temporary files ----------
 log/
 logs/
@@ -174,6 +181,8 @@ stock_data.json
 earnings_calendar.json
 !earnings_calendar.example.json
 market_cap_analysis.html
+反脆弱周盘策略_*.html
+市值vs净利润HTML看板.md
 反脆弱周报复盘_*.md
 
 # ---------- Archives and packaged skills ----------

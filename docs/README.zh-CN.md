@@ -2,7 +2,7 @@
 
 # A-Share Antifragile Trading Loop
 
-### 面向 A 股的隐私优先周度反脆弱研究闭环
+### 面向 A 股的可核验周度反脆弱研究闭环
 
 核实数字，删除陈旧叙事，让可审计证据决定下一步。
 
@@ -41,6 +41,9 @@
 | 资金流窗口 | 精确汇总 5/10/20 个交易日，并保留起止日期 |
 | 决策仲裁 | 数据硬门槛后，BOLL > 量价 > 资金 > 基本面 > 宏观叙事 |
 | 事件时效 | 超过复盘时点 168 小时的事件不得作为本周新增交易依据 |
+| 扫描完整性 | 只有全部配置维度完成后，才允许写“无重大事件” |
+| DXY / 布伦特 | 分别使用最近两周五收盘和最近五个有效观测，明确起止日期 |
+| 财报前瞻 | 从本地忽略文件读取未来 7/30 天披露窗口，不推断缺失日期 |
 | 黄金仓位 | 读取 CFTC COMEX 管理基金周度仓位，失败时明确提示 |
 | 失效处理 | 标注数据不可用，不生成模拟值或伪结论 |
 
@@ -76,7 +79,7 @@ python3 run_weekly_report.py
 antifragile_weekly_YYYYMMDD.md
 ```
 
-报告包含市场环境、可选股票周表现、公开黄金仓位背景、数据降级状态和反脆弱研究护栏。
+报告包含市场环境、可选股票周表现、DXY/布伦特周度背景、财报前瞻、公开黄金仓位、数据降级状态和反脆弱研究护栏。
 
 ## 决策契约
 
@@ -100,8 +103,10 @@ BOLL 要成为可执行信号，必须数据已核实且历史完成交易不少
 ├── antifragile/
 │   ├── cftc.py          # CFTC 黄金周度仓位
 │   ├── decision.py      # 证据优先级与动作仲裁
+│   ├── earnings_calendar.py # 未来 7/30 天财报窗口
 │   ├── flows.py         # 5/10/20 日资金窗口
-│   └── freshness.py     # 168 小时事件门槛
+│   ├── freshness.py     # 168 小时事件与扫描完整性
+│   └── market_context.py # DXY 与布伦特周度口径
 ├── assets/readme/
 ├── docs/
 ├── run_weekly_report.py
@@ -125,6 +130,8 @@ python3 -m unittest test_public_snapshot -v
 |---|---|---|
 | `WATCH_TICKERS` | 逗号分隔的 A 股代码 | 空 |
 | `ENABLE_CFTC_GOLD` | 开启 CFTC 黄金仓位背景 | `1` |
+| `ENABLE_MACRO_CONTEXT` | 开启 DXY 与布伦特周度背景 | `1` |
+| `EARNINGS_CALENDAR_PATH` | 本地财报日历路径 | 项目根目录忽略文件 |
 
 公开核心只使用 Python 标准库。
 

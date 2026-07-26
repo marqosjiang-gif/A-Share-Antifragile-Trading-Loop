@@ -41,6 +41,9 @@ Una revisión semanal es frágil cuando mezcla precios recientes, eventos antigu
 | Flujo de capital | Ventanas exactas de 5/10/20 sesiones con fechas de inicio y fin |
 | Arbitraje | Filtro duro de datos; después BOLL > precio/volumen > flujo > fundamentales > narrativa macro |
 | Vigencia de eventos | Rechaza eventos anteriores a 168 horas respecto a la revisión |
+| Cobertura de eventos | Solo declara “sin evento material” cuando terminan todas las dimensiones configuradas |
+| DXY / Brent | Compara dos cierres de viernes y cinco observaciones válidas, con fechas explícitas |
+| Calendario de resultados | Lee ventanas locales de 7/30 días sin inventar fechas ausentes |
 | Posicionamiento del oro | Lee el posicionamiento semanal público de CFTC COMEX y declara fallos |
 | Fallos de fuente | Marca datos no disponibles; nunca usa precios simulados |
 
@@ -76,7 +79,7 @@ Shanghái usa `.SS` y Shenzhen `.SZ`. Usa `ENABLE_CFTC_GOLD=0` para omitir CFTC.
 antifragile_weekly_YYYYMMDD.md
 ```
 
-Incluye contexto de mercado, movimientos semanales opcionales, posicionamiento público del oro, degradación de fuentes y reglas de investigación antifrágil.
+Incluye contexto de mercado, movimientos semanales opcionales, DXY/Brent, calendario de resultados, posicionamiento público del oro, degradación de fuentes y reglas antifrágiles.
 
 ## Contrato de decisión
 
@@ -100,8 +103,10 @@ Una señal BOLL ejecutable requiere datos verificados y al menos tres operacione
 ├── antifragile/
 │   ├── cftc.py
 │   ├── decision.py
+│   ├── earnings_calendar.py
 │   ├── flows.py
-│   └── freshness.py
+│   ├── freshness.py
+│   └── market_context.py
 ├── assets/readme/
 ├── docs/
 ├── run_weekly_report.py
@@ -125,6 +130,8 @@ Las pruebas cubren privacidad por defecto, ventanas de flujo, fechas duplicadas,
 |---|---|---|
 | `WATCH_TICKERS` | Símbolos A separados por comas | Vacío |
 | `ENABLE_CFTC_GOLD` | Contexto público de oro CFTC | `1` |
+| `ENABLE_MACRO_CONTEXT` | Contexto semanal DXY y Brent | `1` |
+| `EARNINGS_CALENDAR_PATH` | Ruta del calendario local ignorado | Vacío |
 
 El núcleo público usa solo la biblioteca estándar de Python.
 

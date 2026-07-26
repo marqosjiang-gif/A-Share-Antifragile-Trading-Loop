@@ -35,6 +35,7 @@ It is designed for investors who want to separate facts from narratives before m
 - Prioritize historical BOLL evidence after hard risk and data-quality gates.
 - Distinguish 5-day sector-flow confirmation from 5/10/20-day individual-stock flow.
 - Surface earnings dates, announcements, event risks, and fresh geopolitical checks.
+- Compare DXY and Brent on explicit weekly windows without turning macro context into a stock signal.
 - Apply *Via Negativa*: unsupported narratives cannot become trading reasons.
 - Record recurring errors in an evolution log so the next report improves without rewriting history.
 
@@ -79,12 +80,12 @@ Run the weekly report generator from the repository root:
 python3 run_weekly_report.py
 ```
 
-The runner first builds a key-free market snapshot with public endpoints. When the full strategy engine is available, it then adds evidence validation, capital-flow radar, historical BOLL analysis, event monitoring, Taleb-style audit, and a next-week decision section.
+The public runner builds a key-free market snapshot, optional watchlist moves, DXY and Brent weekly context, a local forward earnings calendar, and public CFTC gold positioning. Missing sources stay visible instead of being replaced with simulated values.
 
 The result is saved as:
 
 ```text
-反脆弱周盘策略_YYYYMMDD.md
+antifragile_weekly_YYYYMMDD.md
 ```
 
 Before using the output for research, set `WATCH_TICKERS` to your own A-share symbols. Keep any portfolio details only in a local ignored file. Do not commit personal portfolio quantities, costs, reports, email addresses, or credentials.
@@ -122,6 +123,7 @@ python3 -m unittest \
 | H20 capital-flow radar | Is a stock move short-term or persistent across 5/10/20 trading days? | Unverified flow cannot support a directional claim. |
 | Historical BOLL | Does the current location match a tested weekly/monthly strategy? | BOLL has the highest decision weight after hard gates pass. |
 | Event and earnings monitor | Is there a near-term disclosure or material event? | Incomplete scans are labeled, not silently treated as clear. |
+| DXY and Brent | Is weekly macro pressure strengthening or easing? | Context only; it cannot create a stock action by itself. |
 | Evolution log | What failed or drifted last week? | Only recurring, decision-relevant rules are promoted. |
 
 ## Configuration
@@ -136,6 +138,8 @@ python3 -m unittest \
 | `BOLL_BACKTEST_SCRIPT`, `PYTHON_ENV` | Historical BOLL backtest integration | No |
 | `NEODATA_QUERY_SCRIPT`, `NEODATA_SKILL_DIR` | Optional financial-search fallback | No |
 | `ASTOCK_TDX_CACHE` | Optional local TDX cache | No |
+| `ENABLE_MACRO_CONTEXT` | Enable public DXY and Brent weekly context | No |
+| `EARNINGS_CALENDAR_PATH` | Path to an ignored local earnings calendar | No |
 
 Example of enabling a local BOLL backtest:
 
@@ -151,6 +155,8 @@ The weekly report uses explicit time windows:
 - Sector capital confirmation: cumulative five trading days.
 - Individual-stock H20 radar: 5, 10, and 20 trading days, each labeled separately.
 - Event monitoring: recent and forward-looking windows are printed in the report.
+- DXY: latest two Friday closes, with a two-trading-day fallback labeled explicitly.
+- Brent: latest five valid FRED observations, with degraded sample size labeled explicitly.
 
 ### Optional earnings calendar
 

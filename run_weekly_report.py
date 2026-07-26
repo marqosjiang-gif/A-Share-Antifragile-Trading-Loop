@@ -15,6 +15,8 @@ from pathlib import Path
 from typing import Iterable
 
 from antifragile.cftc import fetch_gold_positioning
+from antifragile.earnings_calendar import get_upcoming, load_calendar
+from antifragile.market_context import fetch_brent_weekly, fetch_dxy_weekly
 
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -24,6 +26,10 @@ ENABLE_CFTC_GOLD = os.environ.get("ENABLE_CFTC_GOLD", "1").strip().lower() not i
     "false",
     "no",
 }
+ENABLE_MACRO_CONTEXT = os.environ.get(
+    "ENABLE_MACRO_CONTEXT", "1"
+).strip().lower() not in {"0", "false", "no"}
+EARNINGS_CALENDAR_PATH = os.environ.get("EARNINGS_CALENDAR_PATH", "").strip()
 
 _SSL_CONTEXT = ssl.create_default_context()
 _SSL_CONTEXT.check_hostname = False
@@ -164,6 +170,16 @@ def direction(value: float) -> str:
     return "▲" if value >= 0 else "▼"
 
 
+def _format_weekly_metric(metric) -> str:
+    note = f" ({metric.note})" if metric.note else ""
+    return (
+        f"| {metric.name} | {metric.end_value:.2f} | "
+        f"{direction(metric.change_pct)} {abs(metric.change_pct):.2f}% | "
+        f"{metric.start.isoformat()} to {metric.end.isoformat()} | "
+        f"{metric.source}{note} |"
+    )
+
+
 def build_report(symbols: list[str]) -> str:
     now = datetime.now()
     lines = [
@@ -218,6 +234,30 @@ def build_report(symbols: list[str]) -> str:
     except Exception:
         lines.append("| SPY / QQQ / VIX | -- | data unavailable | -- |")
 
+    lines.extend(
+        [
+            "",
+            "### Weekly macro context",
+            "",
+            "| Metric | Last | Weekly move | Window | Source |",
+            "|---|---:|---:|---|---|",
+        ]
+    )
+    if not ENABLE_MACRO_CONTEXT:
+        lines.append("| DXY / Brent crude | -- | disabled | -- | configuration |")
+    else:
+        for fetcher, label in (
+            (fetch_dxy_weekly, "DXY"),
+            (fetch_brent_weekly, "Brent crude"),
+        ):
+            try:
+                lines.append(_format_weekly_metric(fetcher()))
+            except Exception as exc:
+                lines.append(
+                    f"| {label} | -- | data unavailable | -- | "
+                    f"{type(exc).__name__} |"
+                )
+
     lines.extend(["", "## Configured A-share watchlist", ""])
     if not symbols:
         lines.extend(
@@ -249,6 +289,40 @@ def build_report(symbols: list[str]) -> str:
                 lines.append(
                     f"| {symbol} | -- | -- | data unavailable | -- |"
                 )
+
+    lines.extend(["", "## Forward disclosure calendar", ""])
+    try:
+        calendar = load_calendar(EARNINGS_CALENDAR_PATH or None)
+        focus, extended, _, pending = get_upcoming(
+            calendar, datetime.now().strftime("%Y%m%d")
+        )
+        upcoming = focus + extended
+        if upcoming:
+            lines.extend(
+                [
+                    "| Symbol | Scheduled date | Days ahead | Source |",
+                    "|---|---|---:|---|",
+                ]
+            )
+            for item in upcoming:
+                lines.append(
+                    f"| {item['code']} | {item['scheduled_date']} | "
+                    f"{item['days']} | {item.get('source') or 'local calendar'} |"
+                )
+        elif pending:
+            lines.append(
+                "Earnings dates are incomplete; no disclosure conclusion was generated."
+            )
+        else:
+            lines.append(
+                "No configured disclosures fall inside the next 30 days, "
+                "or the local calendar is empty."
+            )
+    except Exception as exc:
+        lines.append(
+            "Earnings calendar unavailable; no date was inferred "
+            f"({type(exc).__name__})."
+        )
 
     lines.extend(["", "## Public positioning context", ""])
     if not ENABLE_CFTC_GOLD:
@@ -284,6 +358,8 @@ def build_report(symbols: list[str]) -> str:
             "- Remove unsupported narratives before adding a directional view.",
             "- Treat missing or conflicting data as lower confidence.",
             "- Require event claims to pass a 168-hour freshness gate.",
+            "- A no-event conclusion requires every configured event dimension to complete its scan.",
+            "- Keep sector five-day flow separate from stock 5/10/20-day flow and print exact dates.",
             "- Let an adequately sampled historical BOLL signal lead; use lower-priority evidence to confirm or constrain it.",
             "- This snapshot does not place orders or provide investment advice.",
             "",
