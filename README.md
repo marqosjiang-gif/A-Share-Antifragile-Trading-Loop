@@ -152,6 +152,10 @@ The weekly report uses explicit time windows:
 - Individual-stock H20 radar: 5, 10, and 20 trading days, each labeled separately.
 - Event monitoring: recent and forward-looking windows are printed in the report.
 
+### Optional earnings calendar
+
+Copy `earnings_calendar.example.json` to the ignored local file `earnings_calendar.json`, then add only the symbols you want to monitor. The reusable helper in `antifragile/earnings_calendar.py` renders the next 7-day and 30-day disclosure windows, and reports missing dates as missing rather than inventing them.
+
 ## FAQ
 
 ### Does it trade automatically or send orders to a broker?
