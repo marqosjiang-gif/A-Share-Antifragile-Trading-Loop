@@ -115,6 +115,7 @@ watchlist.local.*
 
 # Private or locally installed strategy skills are not part of the public core.
 skills/
+TradingAgents/
 
 # ---------- Runtime logs and temporary files ----------
 log/
@@ -165,6 +166,15 @@ copper_charts/
 # Public README visual generated for this repository.
 !assets/readme/hero.png
 !assets/readme/hero-v2.png
+!assets/readme/research-loop.png
+
+# Local research artifacts and generated market extracts.
+boll_v2_reports/
+stock_data.json
+earnings_calendar.json
+!earnings_calendar.example.json
+market_cap_analysis.html
+反脆弱周报复盘_*.md
 
 # ---------- Archives and packaged skills ----------
 *.zip
