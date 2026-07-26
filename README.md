@@ -2,136 +2,177 @@
 
 # A-Share Antifragile Trading Loop
 
-### A privacy-first weekly research loop for China A-shares
+### A weekly evidence loop for disciplined A-share research
 
-Verify the numbers. Delete stale stories. Let auditable evidence lead the next action.
+Verify the data. Filter the story. Decide with evidence. Learn from the result.
 
 [English](README.md) | [Español](docs/README.es.md) | [简体中文](docs/README.zh-CN.md)
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-494FDF.svg)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-2563EB.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-3776AB.svg?logo=python&logoColor=white)](https://www.python.org/)
-[![Market: A-shares](https://img.shields.io/badge/Market-A--shares-E23B4A.svg)](#what-it-does)
-[![Privacy: local first](https://img.shields.io/badge/Privacy-Local--first-191C1F.svg)](#privacy-by-design)
-[![Tests: 13](https://img.shields.io/badge/Tests-13_passed-00A87E.svg)](#verification)
+[![Market: A-shares](https://img.shields.io/badge/Market-A--shares-C81E1E.svg)](#what-this-project-does)
+[![Cadence: Weekly](https://img.shields.io/badge/Cadence-Weekly-059669.svg)](#quick-start)
+[![Core: Key-free](https://img.shields.io/badge/Core-Key--free-7C3AED.svg)](#configuration)
 
-<img src="assets/readme/hero.png" alt="Market data passing through verification gates into an auditable weekly decision loop" width="100%" />
+<img src="assets/readme/hero.png" alt="A-Share Antifragile Trading Loop workflow" width="100%" />
+
+**[What it does](#what-this-project-does) · [Install](#installation) · [Quick start](#quick-start) · [Example](#usage-example) · [Configuration](#configuration) · [FAQ](#faq)**
 
 </div>
 
 > [!IMPORTANT]
-> Education and research only. The project does not place orders and does not promise investment performance.
+> This is an A-share research and decision-support project. It never places orders, and it is not financial advice.
 
-## Why this exists
+## What This Project Does
 
-A weekly review becomes fragile when fresh prices, stale events, inconsistent time windows, and personal conviction are mixed together. This project turns the review into a small, testable loop:
+**A-Share Antifragile Trading Loop** turns a weekly market review into an auditable research routine. It creates a Markdown strategy report from public market data, then makes the quality of the evidence visible instead of hiding missing, stale, or conflicting inputs.
 
-1. Fetch public runtime data.
-2. Make every time window explicit.
-3. Stop when price or volume cannot be verified.
-4. Give adequately sampled historical BOLL evidence the highest decision weight.
-5. Use capital flow, fundamentals, commodities, and events as confirmation or constraints.
-6. Show degraded inputs instead of inventing replacements.
+The core workflow is defined in [`6只持仓股信息筛选SKILL.md`](6只持仓股信息筛选SKILL.md) and implemented by [`Weekly_strategy.py`](skills/市场消息求真去伪skill/Weekly_strategy.py). The root runner, [`run_weekly_report.py`](run_weekly_report.py), starts the workflow and writes `反脆弱周盘策略_YYYYMMDD.md` to the project root.
 
-## What it does
+It is designed for investors who want to separate facts from narratives before making a weekly swing-trading decision:
 
-| Capability | Public behavior |
-|---|---|
-| A-share market context | SSE Composite, SZSE Component, and STAR 50 snapshots |
-| Optional watchlist | Accepts symbols only through `WATCH_TICKERS`; the default is empty |
-| Weekly window | Calculates first open to last close of the latest represented trading week |
-| Capital-flow windows | Aggregates exact 5/10/20-trading-day windows and retains start/end dates |
-| Decision arbitration | Hard data gate, then BOLL > price/volume > flow > fundamentals > macro narrative |
-| Event freshness | Rejects event claims older than 168 hours from the review time |
-| Gold positioning | Reads public weekly CFTC COMEX managed-money positioning with explicit fallback |
-| Failure behavior | Marks unavailable data; never substitutes simulated market values |
+- Verify price, volume, dates, and source agreement before interpretation.
+- Prioritize historical BOLL evidence after hard risk and data-quality gates.
+- Distinguish 5-day sector-flow confirmation from 5/10/20-day individual-stock flow.
+- Surface earnings dates, announcements, event risks, and fresh geopolitical checks.
+- Apply *Via Negativa*: unsupported narratives cannot become trading reasons.
+- Record recurring errors in an evolution log so the next report improves without rewriting history.
 
-## Privacy by design
+<img src="assets/readme/research-loop.png" alt="Evidence-led weekly research loop: verified data, risk filters, BOLL evidence, flow confirmation, and learning log" width="100%" />
 
-- No default stock list, portfolio, position size, purchase cost, account, or email.
-- Generated reports, local configuration, logs, exports, and charts are ignored by Git.
-- Research symbols are supplied at runtime and remain local unless the user publishes them.
-- Public modules operate on generic evidence objects, not a hidden personal profile.
+## Installation
 
-## Quick start
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/marqosjiang-gif/A-Share-Antifragile-Trading-Loop.git
 cd A-Share-Antifragile-Trading-Loop
+```
+
+### 2. Create a Python environment
+
+```bash
 python3 -m venv .venv
 source .venv/bin/activate
+```
+
+On Windows PowerShell, activate with:
+
+```powershell
+.venv\Scripts\Activate.ps1
+```
+
+### 3. Install dependencies
+
+```bash
+python3 -m pip install --upgrade pip
+python3 -m pip install -r requirements.txt
+```
+
+The base workflow needs `pandas`. `yfinance`, `matplotlib`, and `akshare` are optional enhancements for cross-checking, charts, and selected data paths.
+
+## Quick Start
+
+Run the weekly report generator from the repository root:
+
+```bash
 python3 run_weekly_report.py
 ```
 
-The first run needs no stock list and produces market context only. To add your own research symbols:
+The runner first builds a key-free market snapshot with public endpoints. When the full strategy engine is available, it then adds evidence validation, capital-flow radar, historical BOLL analysis, event monitoring, Taleb-style audit, and a next-week decision section.
+
+The result is saved as:
+
+```text
+反脆弱周盘策略_YYYYMMDD.md
+```
+
+Before using the output for research, replace the sample watchlist with your own A-share codes. Review `WATCH_TICKERS`, `_TICKER_SECID`, and `_TICKER_NAME` in [`run_weekly_report.py`](run_weekly_report.py), then keep the portfolio definitions used by the strategy modules consistent with that list. Do not commit personal portfolio quantities, costs, reports, email addresses, or credentials.
+
+## Usage Example
+
+### Generate a report
 
 ```bash
-export WATCH_TICKERS="<six-digit-symbol>.SS,<six-digit-symbol>.SZ"
 python3 run_weekly_report.py
 ```
 
-Set `ENABLE_CFTC_GOLD=0` to skip the public CFTC request. Shanghai uses `.SS`; Shenzhen uses `.SZ`.
-
-## Output
-
-```text
-antifragile_weekly_YYYYMMDD.md
-```
-
-The file contains market context, optional weekly symbol moves, public gold-positioning context, source degradation, and research guardrails.
-
-## Decision contract
-
-```mermaid
-flowchart TD
-    A["Runtime public data"] --> B{"Price and volume verified?"}
-    B -- No --> C["Observe only"]
-    B -- Yes --> D["Historical BOLL evidence"]
-    D --> E["5 / 10 / 20-day capital flow"]
-    E --> F["Fundamentals and fresh events"]
-    F --> G["Auditable conditional action"]
-    G --> H["Weekly review and rule evolution"]
-```
-
-An actionable BOLL result requires verified data and at least three completed historical trades. Lower-priority signals may constrain confidence, but they cannot silently overwrite a valid higher-priority signal.
-
-## Project structure
-
-```text
-.
-├── antifragile/
-│   ├── cftc.py          # public COMEX gold positioning
-│   ├── decision.py      # evidence priority and action arbitration
-│   ├── flows.py         # exact 5/10/20-day flow windows
-│   └── freshness.py     # 168-hour event gate
-├── assets/readme/
-├── docs/
-├── run_weekly_report.py
-├── test_public_snapshot.py
-├── config.yaml
-└── DESIGN.md
-```
-
-## Verification
+### Validate the Python entry points after a workflow change
 
 ```bash
-python3 -m py_compile run_weekly_report.py antifragile/*.py
-python3 -m unittest test_public_snapshot -v
+python3 -m py_compile \
+  run_weekly_report.py \
+  skills/市场消息求真去伪skill/Weekly_strategy.py
 ```
 
-The test suite covers symbol privacy defaults, exact flow windows, duplicate-date rejection, event freshness, BOLL priority, low-sample protection, conflicting evidence, and CFTC parsing.
+### Run the focused decision-rule tests
+
+```bash
+python3 -m unittest \
+  test_boll_decision_priority \
+  test_fund_flow_skill_rules \
+  test_geopolitical_freshness
+```
+
+### Read the generated report correctly
+
+| Report area | Question it answers | Guardrail |
+|---|---|---|
+| Sector strength + 5-day flow | Is a concept sector rising with capital confirmation? | Price-only momentum stays observation-only. |
+| H20 capital-flow radar | Is a stock move short-term or persistent across 5/10/20 trading days? | Unverified flow cannot support a directional claim. |
+| Historical BOLL | Does the current location match a tested weekly/monthly strategy? | BOLL has the highest decision weight after hard gates pass. |
+| Event and earnings monitor | Is there a near-term disclosure or material event? | Incomplete scans are labeled, not silently treated as clear. |
+| Evolution log | What failed or drifted last week? | Only recurring, decision-relevant rules are promoted. |
 
 ## Configuration
 
-| Variable | Purpose | Default |
+[`config.yaml`](config.yaml) documents optional integrations. The default path uses public, key-free market endpoints; unavailable optional services should degrade visibly rather than stop the report.
+
+| Setting | Purpose | Required |
 |---|---|---|
-| `WATCH_TICKERS` | Comma-separated A-share symbols | Empty |
-| `ENABLE_CFTC_GOLD` | Enable public CFTC gold context | `1` |
+| `TA_VENV`, `TA_RUN_WEBUI_TOOLS`, `TA_CWD` | Optional TradingAgents market snapshot | No |
+| `WESTOCK_CLI`, `YAHOO_FINANCE_SKILL`, `TA_PYTHON` | Optional cross-source validation paths | No |
+| `JIAOZHEN_API_KEY` | Optional third-source geopolitical fact check | No |
+| `BOLL_BACKTEST_SCRIPT`, `PYTHON_ENV` | Historical BOLL backtest integration | No |
+| `NEODATA_QUERY_SCRIPT`, `NEODATA_SKILL_DIR` | Optional financial-search fallback | No |
+| `ASTOCK_TDX_CACHE` | Optional local TDX cache | No |
 
-The public core uses only the Python standard library.
+Example of enabling a local BOLL backtest:
 
-## Contributing
+```bash
+export BOLL_BACKTEST_SCRIPT="/absolute/path/to/boll_backtest.py"
+export PYTHON_ENV="/absolute/path/to/python"
+python3 run_weekly_report.py
+```
 
-Issues and pull requests are welcome. Do not commit credentials, personal financial data, generated reports, private paths, or proprietary material.
+The weekly report uses explicit time windows:
+
+- Weekly price movement: first actual A-share market open to Friday close.
+- Sector capital confirmation: cumulative five trading days.
+- Individual-stock H20 radar: 5, 10, and 20 trading days, each labeled separately.
+- Event monitoring: recent and forward-looking windows are printed in the report.
+
+## FAQ
+
+### Does it trade automatically or send orders to a broker?
+
+No. It only generates research output and risk-aware action suggestions.
+
+### Do I need an API key?
+
+No for the basic report path. Optional integrations may need local tools, environment variables, or credentials. Leave unavailable integrations blank; the report should state any resulting degradation.
+
+### Why does the report show a warning instead of a conclusion?
+
+That is deliberate. A missing source, stale event, price disagreement, incomplete scan, or unverified capital-flow reading must not be converted into a confident trading narrative.
+
+### How should I change the watchlist?
+
+Update the stock code, exchange mapping, and display name maps in [`run_weekly_report.py`](run_weekly_report.py). Keep related strategy-module portfolio definitions aligned. Use only your own local configuration and keep personal position information outside Git.
+
+### What should be committed to a public fork?
+
+Source code, generic configuration templates, tests, documentation, and non-sensitive visual assets. Do not commit generated reports, local caches, portfolio quantities or costs, personal email addresses, API keys, tokens, or local absolute paths.
 
 ## License
 
@@ -139,4 +180,4 @@ Released under the [MIT License](LICENSE).
 
 ## Disclaimer
 
-Market data may be delayed, incomplete, revised, or unavailable. Users remain responsible for validating sources and making their own decisions.
+This repository is for education and quantitative research only. Market data can be delayed, incomplete, or unavailable. No signal, backtest, or report guarantees future performance. You are responsible for your own investment decisions.
