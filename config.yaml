@@ -1,0 +1,64 @@
+project:
+  name: A-Share Medium-Low Frequency Quant Loop
+  runtime: Python 3.10+
+
+market:
+  target: China A-shares
+  context:
+    - SSE Composite
+    - SZSE Component
+    - STAR 50
+    - SPY
+    - QQQ
+    - VIX
+
+watchlist:
+  source: WATCH_TICKERS environment variable
+  default: empty
+  accepted_suffixes:
+    - .SS
+    - .SZ
+
+data_policy:
+  runtime_only: true
+  missing_data: mark_unavailable
+  simulated_fallback: false
+  event_freshness_hours: 168
+  event_no_result_requires_complete_scan: true
+  print_metric_date_windows: true
+
+research_policy:
+  decision_priority:
+    - verified_historical_boll
+    - price_and_volume
+    - capital_flow_5_10_20_days
+    - company_fundamentals
+    - commodity_transmission
+    - geopolitical_context
+  minimum_completed_boll_trades: 3
+  boll_band_wording:
+    above_upper_pct: active_sell_region
+    below_lower_pct: active_buy_region
+  stock_flow_thresholds: liquidity_aware
+  unsupported_narratives: remove
+
+macro_context:
+  enabled_by_default: true
+  dxy:
+    source: Yahoo Finance v8 DX-Y.NYB
+    comparison: latest_two_friday_closes
+  brent:
+    source: FRED DCOILBRENTEU
+    comparison: latest_five_valid_observations
+
+earnings_calendar:
+  local_path_variable: EARNINGS_CALENDAR_PATH
+  focus_days: 7
+  extended_days: 30
+  infer_missing_dates: false
+
+public_context:
+  cftc_gold:
+    enabled_by_default: true
+    source: CFTC Disaggregated Futures-Only
+    market_code: "088691"

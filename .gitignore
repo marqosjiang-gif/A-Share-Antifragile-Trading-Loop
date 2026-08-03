@@ -1,0 +1,197 @@
+# ============================================================
+# A-Share Antifragile Trading Loop
+#
+# Stack:
+# - Python 3.10+ scripts and unittest tests
+# - pandas core; yfinance/matplotlib/akshare optional
+# - JSON/YAML/Markdown configuration and documentation
+# - OpenClaw skill metadata (package.json; no Node runtime required)
+#
+# Policy: commit source, tests, public docs, examples, and README assets.
+# Ignore secrets, personal portfolio data, caches, logs, generated reports,
+# charts, exports, local automation state, and build artifacts.
+# ============================================================
+
+# ---------- Python bytecode and interpreter caches ----------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+__pypackages__/
+
+# ---------- Python environments ----------
+.venv/
+venv/
+env/
+ENV/
+python-env/
+.conda/
+conda-env/
+
+# ---------- Python packaging ----------
+build/
+dist/
+develop-eggs/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+pip-log.txt
+pip-delete-this-directory.txt
+
+# ---------- Tests, coverage, lint, type checking ----------
+.pytest_cache/
+.hypothesis/
+.tox/
+.nox/
+.coverage
+.coverage.*
+coverage.xml
+coverage.json
+htmlcov/
+junit.xml
+.mypy_cache/
+.pyre/
+.pytype/
+.pyright/
+.ruff_cache/
+.cache/
+*.prof
+
+# ---------- Jupyter ----------
+.ipynb_checkpoints/
+
+# ---------- Optional Node/OpenClaw local dependencies ----------
+node_modules/
+.npm/
+.pnpm-store/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ---------- Secrets and local configuration ----------
+.env
+.env.*
+*.env
+!.env.example
+config.local.yaml
+config.local.yml
+*.local.yaml
+*.local.yml
+.mailrc
+
+*.key
+*.pem
+*.p12
+*.pfx
+*.secret
+credentials.json
+token.json
+secrets.json
+secrets.yaml
+secrets.yml
+
+# ---------- Personal research inputs ----------
+*portfolio*.json
+!portfolio.example.json
+portfolio.local.*
+watchlist.local.*
+watchlist.json
+macro_sensitivity.json
+announcements_cache.json
+earnings_calendar.json
+stock_data.json
+market_cap_analysis.html
+boll_v2_reports/
+TradingAgents/
+
+# ---------- WorkBuddy/OpenClaw local state ----------
+.workbuddy/
+.clawhub/
+
+# ---------- Runtime logs and temporary files ----------
+log/
+logs/
+*.log
+*.tmp
+*.temp
+*.bak
+*.orig
+tmp/
+temp/
+
+# Evolution logs are local weekly runtime outputs, not public source docs.
+evolution_logs/
+
+# ---------- Market-data and application caches ----------
+tdx_cache.json
+*tdx_cache.json
+tdx_price_cache.json
+*price_cache.json
+fund_flow_calibration.json
+skills/**/geopolitical_events.json
+
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+
+# ---------- Generated reports and exports ----------
+反脆弱周盘策略_*.md
+BOLL操作策略_*.md
+BOLL策略回测报告*.md
+TradingAgents_*.md
+交叉信源验真_*.md
+weekly_quant_research_*.md
+
+deliverables/
+copper_charts/
+
+# ---------- Generated charts and large binary assets ----------
+*.png
+*.jpg
+*.jpeg
+*.webp
+*.gif
+
+# Public README visual generated for this repository.
+!assets/readme/hero.png
+
+# ---------- Archives and packaged skills ----------
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.7z
+
+# ---------- Editors and IDEs ----------
+.vscode/
+.idea/
+*.code-workspace
+*.swp
+*.swo
+*~
+
+# ---------- Operating systems ----------
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+Desktop.ini

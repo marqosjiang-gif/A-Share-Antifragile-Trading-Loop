@@ -1,0 +1,10 @@
+# Copy to config.local.yaml for local-only integrations.
+# Keep credentials and absolute machine paths out of Git.
+project:
+  name: a-share-medium-low-frequency-quant-loop
+
+optional:
+  market_data_provider: ""
+  boll_backtest_script: ""
+  local_python: ""
+  event_verification_key: ""

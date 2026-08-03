@@ -1,0 +1,16 @@
+# 反脆弱周盘策略报告生成器 · 依赖清单
+# 说明：核心报告（WeeklyStrategyReport）只用 Python 标准库（urllib/ssl/json）
+#       + pandas，数据来自公开免 key API（东方财富 / 腾讯财经）。
+#       下列「可选」项仅在启用对应增强功能时才需要。
+
+# ---- 核心（开箱即用必需）----
+pandas>=1.5
+
+# ---- 可选：交叉信源验真（cross_source_verify.py 的 Yahoo Finance 分支）----
+yfinance>=0.2
+
+# ---- 可选：BOLL 回测图表（boll_backtest.py）----
+matplotlib>=3.5
+
+# ---- 可选：akshare 辅助数据源（部分回测路径）----
+akshare>=1.10

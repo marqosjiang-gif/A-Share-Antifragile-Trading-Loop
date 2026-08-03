@@ -1,0 +1,10 @@
+{
+  "description": "Public schema only. Copy to watchlist.local.json and replace with your own A-share research universe. Do not add position quantity, cost basis, account, email, token, or API key.",
+  "universe": [
+    {
+      "code": "000001",
+      "exchange": "SZ",
+      "name": "Example A-share"
+    }
+  ]
+}
