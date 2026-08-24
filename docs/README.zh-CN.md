@@ -1,6 +1,6 @@
-# A股中低频量化研究循环
+# A股反脆弱交易循环
 
-面向 A 股周度复盘的证据优先研究工作流：先量化一周数据，再排除不可靠信息，最后只在规则一致时形成条件式决策。
+面向 A 股周度复盘的证据优先研究工作流，重点增强两件事：专家团协作，以及有边界的自主进化。
 
 [English](../README.md) | [Español](README.es.md) | [简体中文](README.zh-CN.md)
 
@@ -38,6 +38,10 @@ python3 quant_loop.py --watchlist watchlist.local.json
 - `Via Negativa` 去除未验证叙事
 - `report_generated_at`、`evidence_cutoff`、下周验证窗口的审计字段
 - 只沉淀跨周复现规则的进化闭环
+- 专家团六阶段协作：收集、验证、合成、仲裁、决策、主编
+- W1 生成 → W2 复盘 → W3 进化 → 下一轮 W1 的自主改进闭环
+
+专家团机制见 [`专家团协作说明`](expert-team.md)，自主进化规则见 [`自主进化闭环`](evolution-loop.md)。
 
 详细规则见 [`PUBLIC_PROTOCOL.md`](../PUBLIC_PROTOCOL.md)。
 

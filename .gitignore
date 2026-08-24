@@ -169,6 +169,21 @@ copper_charts/
 
 # Public README visual generated for this repository.
 !assets/readme/hero.png
+!assets/readme/expert-team-loop.png
+
+# ---------- Private operating docs and local implementation ----------
+AGENTS.md
+SKILL.md
+当前持仓current_portfolio.json
+current_portfolio.json
+evolution_notes_*.md
+hitl_confirmation_*.md
+fact_check_report_*.md
+data_source_health.json
+scripts/fetch_data.py
+scripts/pingan_announcement_adapter.py
+scripts/sync_expert_team.sh
+skills/市场消息求真去伪skill/
 
 # ---------- Archives and packaged skills ----------
 *.zip

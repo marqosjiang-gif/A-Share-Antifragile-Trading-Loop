@@ -1,10 +1,10 @@
 <div align="center">
 
-# A-Share Medium-Low Frequency Quant Loop
+# A-Share Antifragile Trading Loop
 
-### An evidence-first weekly research workflow for A-share investors
+### An evidence-first research loop with an expert council and bounded self-improvement
 
-**Measure the week. Reject weak evidence. Act only when the rules agree.**
+**Collect. Verify. Debate. Arbitrate. Review. Evolve.**
 
 [English](README.md) | [Español](docs/README.es.md) | [简体中文](docs/README.zh-CN.md)
 
@@ -14,20 +14,25 @@
 [![Style: Medium-low frequency](https://img.shields.io/badge/Style-Medium--low_frequency-059669.svg)](#how-the-loop-works)
 [![Mode: Research only](https://img.shields.io/badge/Mode-Research_only-7C3AED.svg)](#important-boundaries)
 
-<img src="assets/readme/hero.png" alt="A-share medium-low frequency quant research loop" width="100%" />
+<img src="assets/readme/hero.png" alt="A-share antifragile research loop" width="100%" />
 
-**[What it is](#what-it-is) · [Install](#install) · [Quick start](#quick-start) · [Workflow](#how-the-loop-works) · [Configuration](#configuration) · [FAQ](#faq)**
+**[Why](#why-this-project) · [Quick start](#quick-start) · [Expert council](#the-expert-council) · [Evolution](#bounded-self-improvement) · [Privacy](#privacy-boundary)**
 
 </div>
 
 > [!IMPORTANT]
 > This repository is for quantitative research and decision support. It does not connect to a broker, place orders, or provide investment advice.
 
-## What It Is
+## Why This Project
 
 Most individual A-share workflows are too fast to audit and too slow to learn from: daily noise is mistaken for a trend, old news is used as a catalyst, and a backtest price is treated as if it were executable.
 
-**A-Share Medium-Low Frequency Quant Loop** packages a slower, rule-led alternative. It is designed for weekly review and next-week preparation, not intraday prediction. Its reusable methods are:
+**A-Share Antifragile Trading Loop** packages a slower, rule-led alternative for weekly review and next-week preparation—not intraday prediction. Its two differentiators are:
+
+1. **Expert council:** collection, verification, synthesis, arbitration, decision and publishing are separate stages with explicit handoff contracts.
+2. **Bounded self-improvement:** each report is reviewed against the information available at its cutoff; only recurring, decision-relevant and policy-approved rules are promoted.
+
+Its reusable methods are:
 
 - **Weekly measurement:** calculate returns from the first actual market open to the last actual close of the same trading week.
 - **Evidence gates:** verify price, volume, timestamps, source agreement, and missing-data status before interpretation.
@@ -36,7 +41,28 @@ Most individual A-share workflows are too fast to audit and too slow to learn fr
 - **Time-safe review:** a report may only be judged using information public by its `evidence_cutoff`; later disclosures are new events, not proof that the prior report should have known them.
 - **Evolution loop:** retain recurring process rules, while keeping weekly opinions and generated reports local.
 
-The repository contains a small public reference runner, a configurable watchlist template, a public protocol, and tests. Your own watchlist, position size, cost basis, API credentials, reports, and local caches stay outside Git.
+The repository contains a public reference runner, a configurable watchlist template, the public research protocol, the expert-council design, the evolution-loop contract, and tests. Your own watchlist, position size, cost basis, account data, API credentials, reports, and local caches stay outside Git.
+
+## The Expert Council
+
+<img src="assets/readme/expert-team-loop.png" alt="Expert council collaboration and evolution loop" width="100%" />
+
+The coordinator routes work through six stages:
+
+- **Collect:** dated observations from market, filings, news, macro and commodities.
+- **Verify:** source agreement, timestamps, missing-data and conflict checks.
+- **Synthesize:** compare perspectives and make assumptions explicit.
+- **Arbitrate:** apply hard survival gates and the signal hierarchy.
+- **Decide:** produce conditional next-week checks and risk controls.
+- **Publish:** render an auditable Markdown/HTML report.
+
+Read the detailed public contract in [`docs/expert-team.md`](docs/expert-team.md).
+
+## Bounded Self-Improvement
+
+The loop follows **W1 generate → W2 review → W3 evolve → W1**. It classifies gaps, keeps one-off opinions local, and promotes only recurring improvements that pass a human or policy gate. It can improve the research process; it cannot place orders, modify a brokerage account, or silently expose private data.
+
+Read [`docs/evolution-loop.md`](docs/evolution-loop.md) for the promotion rules and review record.
 
 ## Install
 
@@ -74,7 +100,7 @@ python3 quant_loop.py --watchlist watchlist.local.json
 
 It creates `weekly_quant_research_YYYYMMDD.md`, containing the run time, an evidence cutoff, the intended next-week validation window, and a watchlist checklist. The file is deliberately ignored by Git.
 
-## How The Loop Works
+## How The Public Reference Loop Works
 
 ```mermaid
 flowchart LR
@@ -137,13 +163,14 @@ The output deliberately records these boundaries:
 - `validation_window`: the next actual trading week, from the first executable open to the last close.
 - `decision_status`: `research_only` until data and rule gates are completed.
 
-## Important Boundaries
+## Privacy Boundary
 
 - No order routing, brokerage integration, or automatic position changes.
 - No claim of future return, win rate, or live trading performance.
 - No generated report, local cache, position size, cost basis, email address, token, or API key belongs in a public commit.
 - A later announcement can trigger a new review, but it cannot be used to call an earlier report wrong unless it was already public before that report's evidence cutoff.
 - A backtest or review starts at the next executable market point, not at a convenient historical close.
+- No personal stock list, position quantity, cost basis, account identifier, email, API key, token, cached quote, generated report, or local absolute path belongs in a public commit.
 
 ## FAQ
 
