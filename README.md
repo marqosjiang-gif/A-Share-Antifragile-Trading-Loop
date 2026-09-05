@@ -1,8 +1,8 @@
 <div align="center">
 
-# A-Share Antifragile Trading Loop
+# Antifragile Trading Loop
 
-### An evidence-first research loop with an expert council and bounded self-improvement
+### An evidence-first, market-adaptable research loop with an expert council and bounded self-improvement
 
 **Collect. Verify. Debate. Arbitrate. Review. Evolve.**
 
@@ -10,9 +10,9 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-2563EB.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-3776AB.svg?logo=python&logoColor=white)](https://www.python.org/)
-[![Market: A-shares](https://img.shields.io/badge/Market-A--shares-C81E1E.svg)](#what-it-is)
-[![Style: Medium-low frequency](https://img.shields.io/badge/Style-Medium--low_frequency-059669.svg)](#how-the-loop-works)
-[![Mode: Research only](https://img.shields.io/badge/Mode-Research_only-7C3AED.svg)](#important-boundaries)
+[![Market: adapters](https://img.shields.io/badge/Market-pluggable_adapters-C81E1E.svg)](#market-boundaries)
+[![Style: Medium-low frequency](https://img.shields.io/badge/Style-Medium--low_frequency-059669.svg)](#how-the-public-reference-loop-works)
+[![Mode: Research only](https://img.shields.io/badge/Mode-Research_only-7C3AED.svg)](#privacy-boundary)
 
 <img src="assets/readme/hero.png" alt="A-share antifragile research loop" width="100%" />
 
@@ -27,7 +27,7 @@
 
 Most individual A-share workflows are too fast to audit and too slow to learn from: daily noise is mistaken for a trend, old news is used as a catalyst, and a backtest price is treated as if it were executable.
 
-**A-Share Antifragile Trading Loop** packages a slower, rule-led alternative for weekly review and next-week preparation—not intraday prediction. Its two differentiators are:
+**Antifragile Trading Loop** packages a slower, rule-led alternative for periodic review and next-window preparation—not intraday prediction. An A-share adapter is one possible market profile, not a universal assumption. Its two differentiators are:
 
 1. **Expert council:** collection, verification, synthesis, arbitration, decision and publishing are separate stages with explicit handoff contracts.
 2. **Bounded self-improvement:** each report is reviewed against the information available at its cutoff; only recurring, decision-relevant and policy-approved rules are promoted.
@@ -60,7 +60,7 @@ Read the detailed public contract in [`docs/expert-team.md`](docs/expert-team.md
 
 ## Bounded Self-Improvement
 
-The loop follows **W1 generate → W2 review → W3 evolve → W1**. It classifies gaps, keeps one-off opinions local, and promotes only recurring improvements that pass a human or policy gate. It can improve the research process; it cannot place orders, modify a brokerage account, or silently expose private data.
+The loop follows **W1 generate → W2 review → W2.5 human/policy gate → W3 evolve → W1**. It classifies gaps, keeps one-off opinions local, and promotes only recurring improvements. Changes to decision rules, thresholds, agent roles, prompts, data sources or fallback chains require the W2.5 gate; presentation-only fixes may be recorded and promoted automatically. It can improve the research process; it cannot place orders, modify a brokerage account, or silently expose private data.
 
 Read [`docs/evolution-loop.md`](docs/evolution-loop.md) for the promotion rules and review record.
 
@@ -162,6 +162,10 @@ The output deliberately records these boundaries:
 - `evidence_cutoff`: the latest public information allowed into the report.
 - `validation_window`: the next actual trading week, from the first executable open to the last close.
 - `decision_status`: `research_only` until data and rule gates are completed.
+
+## Market Boundaries
+
+The public core is market-adaptable. Exchange calendars, settlement rules, price limits, short-selling rules, corporate-action treatment, currency and liquidity assumptions belong in a market adapter and must not be silently copied across markets. The included examples use generic symbols; any A-share-specific behavior is optional and must be labeled as such.
 
 ## Privacy Boundary
 
