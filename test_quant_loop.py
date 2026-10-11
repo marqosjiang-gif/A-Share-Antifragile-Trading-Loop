@@ -25,6 +25,17 @@ class QuantLoopTests(unittest.TestCase):
         self.assertIn("validation_window: 2026-08-03 open", report)
         self.assertIn("decision_status: research_only", report)
 
+    def test_report_records_market_profile_without_position_data(self):
+        report = build_report(
+            date(2026, 8, 2),
+            [{"code": "EXAMPLE-001", "exchange": "DEMO", "name": "Example instrument"}],
+            Path("watchlist.local.json"),
+            market_profile="demo",
+        )
+        self.assertIn("market_profile: demo", report)
+        self.assertNotIn("shares:", report)
+        self.assertNotIn("cost:", report)
+
 
 if __name__ == "__main__":
     unittest.main()

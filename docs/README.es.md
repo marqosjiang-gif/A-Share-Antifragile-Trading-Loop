@@ -1,6 +1,6 @@
-# Bucle cuantitativo de frecuencia media-baja para acciones A
+# Bucle de investigación cuantitativa de frecuencia media-baja
 
-Un flujo semanal de investigación para acciones A: medir primero, descartar evidencia débil y actuar solo cuando las reglas coinciden.
+Un flujo semanal adaptable a mercados: medir primero, descartar evidencia débil y actuar solo cuando las reglas coinciden.
 
 [English](../README.md) | [Español](README.es.md) | [简体中文](README.zh-CN.md)
 
@@ -30,6 +30,10 @@ python3 quant_loop.py --watchlist watchlist.local.json
 ```
 
 Configure solo sus propios símbolos en `watchlist.local.json`. El archivo está ignorado por Git: no incluya posiciones, costes, cuentas ni credenciales.
+
+La selección de calendario, liquidación, límites de precio, ventas en corto y
+acciones corporativas pertenece al adaptador del mercado; no se copia entre
+mercados de forma implícita.
 
 ## Límites
 

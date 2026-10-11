@@ -88,6 +88,7 @@ pnpm-debug.log*
 !.env.example
 config.local.yaml
 config.local.yml
+config.yaml
 *.local.yaml
 *.local.yml
 .mailrc
@@ -170,6 +171,7 @@ copper_charts/
 # Public README visual generated for this repository.
 !assets/readme/hero.png
 !assets/readme/expert-team-loop.png
+!assets/readme/evolution-loop.png
 
 # ---------- Private operating docs and local implementation ----------
 AGENTS.md

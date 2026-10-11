@@ -21,6 +21,7 @@ flowchart LR
 - **Visible failure states:** missing, stale or failed sources remain visible and block unsupported directional conclusions.
 - **Bounded prompt editing:** prompts are edited by a scored, limited add/replace/delete process with a before/after review.
 - **Render-level checks:** output structure and forbidden wording are checked after generation, so formatting drift cannot silently change meaning.
+- **Reversible promotion:** every promoted rule keeps its previous version, approval record, test result and rollback path.
 
 ## Promotion rules
 
@@ -30,6 +31,7 @@ flowchart LR
 4. Keep one-off market opinions, private portfolio details and generated reports local.
 5. Route changes to signal priority, thresholds, agent roles, prompts, data sources or fallback chains through the W2.5 human/policy gate.
 6. Allow automatic promotion only for wording, formatting and non-decision-affecting presentation fixes, with a record.
+7. If a post-promotion check fails, restore the previous rule and mark the change `rolled_back`.
 
 ## What “autonomous” means here
 
@@ -43,5 +45,9 @@ evidence_cutoff: YYYY-MM-DDTHH:MM:SS+TZ
 classification: data_or_execution_error
 observed_gap: "source timestamp was missing"
 proposed_rule: "block directional output when timestamp is absent"
+previous_rule: "allow directional output with a timestamp warning"
+approval: pending
+test_result: pending
+rollback_to: "previous_rule"
 status: proposed
 ```

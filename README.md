@@ -14,7 +14,7 @@
 [![Style: Medium-low frequency](https://img.shields.io/badge/Style-Medium--low_frequency-059669.svg)](#how-the-public-reference-loop-works)
 [![Mode: Research only](https://img.shields.io/badge/Mode-Research_only-7C3AED.svg)](#privacy-boundary)
 
-<img src="assets/readme/hero.png" alt="A-share antifragile research loop" width="100%" />
+<img src="assets/readme/hero.png" alt="Antifragile research loop with expert council and bounded evolution" width="100%" />
 
 **[Why](#why-this-project) · [Quick start](#quick-start) · [Expert council](#the-expert-council) · [Evolution](#bounded-self-improvement) · [Privacy](#privacy-boundary)**
 
@@ -43,6 +43,11 @@ Its reusable methods are:
 
 The repository contains a public reference runner, a configurable watchlist template, the public research protocol, the expert-council design, the evolution-loop contract, and tests. Your own watchlist, position size, cost basis, account data, API credentials, reports, and local caches stay outside Git.
 
+The public entry point is intentionally small: `quant_loop.py` creates a
+research scaffold, while `run_weekly_report.py` is only a compatibility wrapper.
+Venue-specific data clients belong in a local adapter and are never required by
+the public core.
+
 ## The Expert Council
 
 <img src="assets/readme/expert-team-loop.png" alt="Expert council collaboration and evolution loop" width="100%" />
@@ -61,6 +66,8 @@ Read the detailed public contract in [`docs/expert-team.md`](docs/expert-team.md
 ## Bounded Self-Improvement
 
 The loop follows **W1 generate → W2 review → W2.5 human/policy gate → W3 evolve → W1**. It classifies gaps, keeps one-off opinions local, and promotes only recurring improvements. Changes to decision rules, thresholds, agent roles, prompts, data sources or fallback chains require the W2.5 gate; presentation-only fixes may be recorded and promoted automatically. It can improve the research process; it cannot place orders, modify a brokerage account, or silently expose private data.
+
+<img src="assets/readme/evolution-loop.png" alt="Evolution loop with a human policy gate and reversible promotion" width="100%" />
 
 Read [`docs/evolution-loop.md`](docs/evolution-loop.md) for the promotion rules and review record.
 
@@ -136,7 +143,7 @@ The ordering matters. A macro story cannot override valid BOLL evidence, and a B
 | `config.local.yaml` | Your paths, keys, and local settings | No, ignored |
 | [`PUBLIC_PROTOCOL.md`](PUBLIC_PROTOCOL.md) | Data, timing, review, and privacy rules | Yes |
 
-The reference runner uses only the standard library. Optional research modules may use `pandas`, `yfinance`, `matplotlib`, or `akshare` when you choose to build them into a local workflow.
+The reference runner uses only the standard library. Optional research modules may use your chosen data libraries when you build them into a local workflow. Provider credentials and venue-specific rules remain local.
 
 ## Usage Example
 
@@ -165,7 +172,7 @@ The output deliberately records these boundaries:
 
 ## Market Boundaries
 
-The public core is market-adaptable. Exchange calendars, settlement rules, price limits, short-selling rules, corporate-action treatment, currency and liquidity assumptions belong in a market adapter and must not be silently copied across markets. The included examples use generic symbols; any A-share-specific behavior is optional and must be labeled as such.
+The public core is market-adaptable. Exchange calendars, settlement rules, price limits, short-selling rules, corporate-action treatment, currency and liquidity assumptions belong in a market adapter and must not be silently copied across markets. The included examples use synthetic symbols; any A-share-specific behavior is optional and must be labeled as such.
 
 ## Privacy Boundary
 

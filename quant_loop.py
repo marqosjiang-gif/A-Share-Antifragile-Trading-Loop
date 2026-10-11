@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Create a private, auditable weekly A-share research scaffold.
+"""Create a private, auditable weekly research scaffold.
 
 The public runner intentionally stops before any order recommendation. It proves
-the timing and evidence contract while leaving a user's live data integrations
-and private watchlist outside the repository.
+the timing and evidence contract while leaving live data integrations and
+private watchlists outside the repository.
 """
 
 from __future__ import annotations
@@ -22,6 +22,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--watchlist", default="watchlist.local.json")
     parser.add_argument("--as-of", help="Report date in YYYY-MM-DD; defaults to today.")
     parser.add_argument("--output-dir", default=".")
+    parser.add_argument(
+        "--market-profile",
+        default="generic",
+        help="Market adapter label; exchange-specific rules stay outside the public runner.",
+    )
     return parser.parse_args()
 
 
@@ -44,7 +49,12 @@ def next_monday(day: date) -> date:
     return day + timedelta(days=(7 - day.weekday()) % 7 or 7)
 
 
-def build_report(as_of: date, watchlist: list[dict[str, str]], source: Path) -> str:
+def build_report(
+    as_of: date,
+    watchlist: list[dict[str, str]],
+    source: Path,
+    market_profile: str = "generic",
+) -> str:
     generated_at = datetime.now(timezone.utc).astimezone().isoformat(timespec="seconds")
     start = next_monday(as_of)
     end = start + timedelta(days=4)
@@ -58,6 +68,7 @@ def build_report(as_of: date, watchlist: list[dict[str, str]], source: Path) -> 
 report_generated_at: {generated_at}
 evidence_cutoff: {generated_at}
 decision_status: research_only
+market_profile: {market_profile}
 watchlist_source: {source.name}
 validation_window: {start:%Y-%m-%d} open to {end:%Y-%m-%d} close, subject to exchange holidays
 ```
@@ -90,7 +101,10 @@ def main() -> int:
     output_dir = Path(args.output_dir).resolve()
     output_dir.mkdir(parents=True, exist_ok=True)
     output = output_dir / f"weekly_quant_research_{as_of:%Y%m%d}.md"
-    output.write_text(build_report(as_of, universe, watchlist_path), encoding="utf-8")
+    output.write_text(
+        build_report(as_of, universe, watchlist_path, args.market_profile),
+        encoding="utf-8",
+    )
     print(output)
     return 0
 

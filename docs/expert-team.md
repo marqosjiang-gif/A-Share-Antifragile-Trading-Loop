@@ -14,7 +14,8 @@ flowchart TD
     C5 --> C6["6. Publish\nauditable Markdown / HTML output"]
     C6 -. "weekly review" .-> R["7. Review vs actual path"]
     R --> E["8. Evolve recurring rules"]
-    E -. "promote tested rules" .-> C1
+    E --> G["W2.5 Human / policy gate"]
+    G -. "approved, tested, reversible" .-> C1
 ```
 
 | Stage | Public responsibility | Output contract |
@@ -25,6 +26,7 @@ flowchart TD
 | Arbitrate | Apply the signal hierarchy and hard survival gates | Conflict resolution record; no silent override |
 | Decide | Convert evidence into conditions, not unconditional predictions | Next-week checks, risk budget and stop conditions |
 | Publish | Render a readable, reproducible report | Markdown/HTML report with cutoff and provenance |
+| W2.5 gate | Review decision-affecting changes before promotion | Approval, test result, previous version and rollback path |
 
 ## Why the council is useful
 
